@@ -2,62 +2,36 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from .products import *
 
 User = get_user_model()
 
 
 # Create your models here.
 
-class Categories(models.Model):
-    name = models.CharField(max_length = 255, verbose_name = 'Category Name')
-    slug = models.SlugField(unique = True)
+class LatestProductManager:
 
-    def __str__(self):
-        return self.name
-
-
-class Product(models.Model):
-    class Meta:
-        abstract = True
-
-    category = models.ForeignKey(Categories, verbose_name = 'Category', on_delete = models.CASCADE)
-    title = models.CharField(max_length = 255, verbose_name = 'Name')
-    slug = models.SlugField(unique = True)
-    image = models.ImageField(verbose_name = 'Pictures')
-    description = models.TextField(verbose_name = 'Description', null = True)
-    price = models.DecimalField(max_digits = 9, decimal_places = 2, verbose_name = 'Price')
-
-    def __str__(self):
-        return self.title
+    @staticmethod
+    def get_products_for_main_page(self, *args, **kwargs):
+        with_respect_to = kwargs.get('with_respect_to')
+        products = []
+        ct_models = ContentType.objects.filter(model__in = args)
+        for ct_model in ct_models:
+            model_products = ct_model.model_class()._base_manager.all().order_by('-id')[:5]
+            products.extend(model_products)
+        if with_respect_to:
+            ct_model = ContentType.objects.filter(model = with_respect_to)
+            if ct_model.exists():
+                if with_respect_to in args:
+                    return sorted(
+                        products, key = lambda x: x.__class__._meta.model_name.startswith(with_respect_to),
+                        reverse = True
+                    )
+        return products
 
 
-class Notebook(Product):
-    diagonal = models.CharField(max_length = 255, verbose_name = 'Diagonal')
-    display_type = models.CharField(max_length = 255, verbose_name = 'Display type')
-    processor_freq = models.CharField(max_length = 255, verbose_name = 'Frequency processor')
-    ram = models.CharField(max_length = 255, verbose_name = 'RAM')
-    video = models.CharField(max_length = 255, verbose_name = 'Video card')
-    time_without_charge = models.CharField(max_length = 255, verbose_name = 'Battery operating time')
-
-    def __str__(self):
-        return "{} : {}".format(self.category.name, self.title)
-
-
-class Smartphone(Product):
-    display_diagonal = models.CharField(max_length = 255, verbose_name = 'Diagonal display')
-    display_type = models.CharField(max_length = 255, verbose_name = 'Display type')
-    display_resolution = models.CharField(max_length = 255, verbose_name = 'Display resolution')
-    battery_volume = models.CharField(max_length = 255, verbose_name = 'Battery volume')
-    processor_freq = models.CharField(max_length = 255, verbose_name = 'Frequency processor')
-    ram = models.CharField(max_length = 255, verbose_name = 'RAM')
-    sd_card = models.BooleanField(default = True)
-    sd_card_volume_max = models.CharField(max_length = 255, verbose_name = 'Max volume SD-Card')
-    qty_sim = models.DecimalField(max_digits = 1, decimal_places = 0, verbose_name = 'SIM Quantity')
-    rear_cam_mp = models.CharField(max_length = 255, verbose_name = 'Rear camera resolution')
-    front_cam_mp = models.CharField(max_length = 255, verbose_name = 'Front camera resolution')
-
-    def __str__(self):
-        return "{} : {}".format(self.category.name, self.title)
+class LatestProducts:
+    objects = LatestProductManager
 
 
 class CartProduct(models.Model):
