@@ -3,6 +3,22 @@ from .abstracts import Product
 
 
 class Notebook(Product):
+    # diagonal = models.CharField(max_length = 255, verbose_name = 'Diagonal')
+    # display_type = models.CharField(max_length = 255, verbose_name = 'Display type')
+    # display_resolution = models.CharField(max_length = 255, verbose_name = 'Display resolution')
+    # screen_refresh_rate = models.CharField(max_length = 255, verbose_name = 'Screen refresh rate')
+    # processor_model = models.CharField(max_length = 255, verbose_name = 'Model processor')
+    # processor_freq = models.CharField(max_length = 255, verbose_name = 'Frequency processor')
+    # ram = models.CharField(max_length = 255, verbose_name = 'Memory RAM')
+    # ram_type = models.CharField(max_length = 255, verbose_name = 'Memory RAM type')
+    # max_ram_memory = models.CharField(max_length = 255, verbose_name = 'Possibility of RAM expansion to')
+    # video_card = models.CharField(max_length = 255, verbose_name = 'Video card model')
+    # video_card_memory = models.CharField(max_length = 255, verbose_name = 'Video card memory')
+    # rom = models.CharField(max_length = 255, verbose_name = 'Built-in memory')
+    # operating_system = models.CharField(max_length = 255, verbose_name = 'Operating system')
+    # battery_capacity = models.CharField(max_length = 255, verbose_name = 'Battery capacity')
+    # dimensions = models.CharField(max_length = 255, verbose_name = 'Dimensions')
+    # weight = models.CharField(max_length = 255, verbose_name = 'Weight')
     diagonal = models.CharField(max_length = 255, verbose_name = 'Diagonal')
     display_type = models.CharField(max_length = 255, verbose_name = 'Display type')
     processor_freq = models.CharField(max_length = 255, verbose_name = 'Frequency processor')
