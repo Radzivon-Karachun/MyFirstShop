@@ -52,4 +52,4 @@ class Product(models.Model):
             raise MinResolutionErrorException('Image resolution less than the minimum!')
         elif img.height > max_height or img.width > max_width:
             raise MaxResolutionErrorException('Image resolution is greater than maximum!')
-        return image
+        super().save(*args, **kwargs)
