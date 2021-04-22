@@ -5,8 +5,8 @@ from .products import *
 
 User = get_user_model()
 
-
 # Create your models here.
+
 
 class LatestProductManager:
 
