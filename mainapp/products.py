@@ -1,5 +1,11 @@
 from django.db import models
 from .abstracts import Product
+from django.urls import reverse
+
+
+def get_product_url(obj, viewname):
+    ct_model = obj.__class__._meta.model_name
+    return reverse(viewname, kwargs = {'ct_model': ct_model, 'slug': obj.slug})
 
 
 class Notebook(Product):
@@ -29,6 +35,9 @@ class Notebook(Product):
     def __str__(self):
         return "{} : {}".format(self.category.name, self.title)
 
+    def get_absolut_url(self):
+        return get_product_url(self, 'product_detail')
+
 
 class Smartphone(Product):
     display_diagonal = models.CharField(max_length = 255, verbose_name = 'Diagonal display')
@@ -47,3 +56,6 @@ class Smartphone(Product):
 
     def __str__(self):
         return "{} : {}".format(self.category.name, self.title)
+
+    def get_absolut_url(self):
+        return get_product_url(self, 'product_detail')
